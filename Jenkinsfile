@@ -1,27 +1,28 @@
 pipeline {
     agent {
-        docker { image "${params.buildNode}"
+        docker { image "ubuntu:18.04"
                   args '-u root:root -v $HOME/workspace/myproject:/myproject'
-            
         }
-    }
-    options {
-        skipDefaultCheckout(true)
     }
     stages {
        stage('Checkout SCM') {
-            steps {
-                echo '> Checking out the source control ...'
-                checkout scm
-            }
+          steps {
+            checkout([
+              $class: 'GitSCM',
+              branches: [[name: "**" ]],
+              userRemoteConfigs: [[
+                url: 'https://github.com/gn870988/jenkins-test.git',
+                credentialsId: '',
+              ]]
+             ])
+           }
         }
         stage('Test') {
             steps {
                 sh '''
-                echo "test-again1231"
+                echo "haha"
                 '''
             }
         }
-
     }
 }
